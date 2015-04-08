@@ -1,5 +1,7 @@
 package br.com.conversor.excel;
 
+import java.awt.BorderLayout;
+import java.awt.Container;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -9,8 +11,12 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.swing.BorderFactory;
 import javax.swing.JFileChooser;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.JProgressBar;
+import javax.swing.border.Border;
 import javax.swing.filechooser.FileFilter;
 
 import org.apache.poi.hssf.usermodel.HSSFSheet;
@@ -26,6 +32,7 @@ public class Excel {
 	private LeitorProperties prop;
 	private List<SolicitacaoOrigem> solicitacoesOrigem;
 	private List<SolicitacaoDestino> solicitacoesDestino;
+	private JProgressBar progressBar;
 	/**
 	 * Construtor que recebe como parâmetro o caminho do arquivo Excel de origem dos dados
 	 * @param arquivoExcelOrigem
@@ -37,6 +44,7 @@ public class Excel {
 			this.prop = new LeitorProperties();
 			this.solicitacoesDestino = new ArrayList<>();
 			this.solicitacoesOrigem = new ArrayList<>();
+			this.progressBar = new JProgressBar();
 		}catch(IOException e){
 			throw new IOException("Não foi possível ler o arquivo de configuração do programa.");
 		}
@@ -58,6 +66,12 @@ public class Excel {
 			
 			// Get iterator to all the rows in current sheet
 			Iterator<Row> rowIterator = sheet.iterator();
+			
+			int max = 0;
+			if(sheet.getLastRowNum() > 3){
+				max = sheet.getLastRowNum() - 3;
+			}
+			this.progressBar.setMaximum(max);
 			// Iterate through each rows from first sheet
 			while (rowIterator.hasNext()) {
 				Row row = rowIterator.next();
@@ -65,6 +79,8 @@ public class Excel {
 				if (row.getRowNum() < 3) {
 					continue;
 				}
+				
+				this.progressBar.setValue(row.getRowNum() - 3);
 				// Get iterator to all cells of current row
 				Iterator<Cell> cellIterator = row.cellIterator();
 				// For each row, iterate through each columns
@@ -182,8 +198,7 @@ public class Excel {
 			solicitacaoDestino.setTempoTotalAccenture(solicitacaoOrigem.getSlaConsumido());
 			solicitacaoDestino.setDataMaxima(null);
 			solicitacaoDestino.setDescricao(solicitacaoOrigem.getDescricao());
-			solicitacaoDestino.setCodigoConclusao("");
-			
+			solicitacaoDestino.setCodigoConclusao("");			
 			
 			this.solicitacoesDestino.add(solicitacaoDestino);
 		}
@@ -250,6 +265,10 @@ public class Excel {
 		return solicitacoesDestino;
 	}
 	
+	public JProgressBar getProgressBar(){
+		return progressBar;
+	}
+	
 	public void escreverArquivoExcel(String arquivoExcelSaida) throws IOException{
 		try{
 			HSSFWorkbook workbook = new HSSFWorkbook();
@@ -269,10 +288,11 @@ public class Excel {
 			CellStyle cellStyleData = workbook.createCellStyle();
 			cellStyleData.setDataFormat(createHelperData.createDataFormat().getFormat("dd/MM/yyyy HH:mm:ss"));
 			Date dataAux = null;
+			this.progressBar.setMaximum(this.solicitacoesDestino.size());
 			//Dados
 			for (int i = 0; i < this.solicitacoesDestino.size(); i++) {
 				Row rowDados = sheet.createRow(i + 1);
-				
+				this.progressBar.setValue(i + 1);
 				//solicitacao
 				Cell cell0 = rowDados.createCell(0);
 				cell0.setCellValue(this.solicitacoesDestino.get(i).getSolicitacao());
@@ -402,6 +422,7 @@ public class Excel {
 	}
 
 	public static void main(String[] args) throws IOException {
+		JFrame f = new JFrame("Progresso.");
 		try{
 			JFileChooser fileChooser = new JFileChooser();
 			fileChooser.setCurrentDirectory(new File("."));
@@ -416,17 +437,38 @@ public class Excel {
 			});
 			if (fileChooser.showDialog(null, "Selecione o arquivo para importação") == JFileChooser.APPROVE_OPTION) {
 				File fileEntrada = fileChooser.getSelectedFile();
-				Excel conversor = new Excel(fileEntrada.getPath());
+				Excel conversor = new Excel(fileEntrada.getPath());				
+				
+			    f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+			    Container content = f.getContentPane();
+			    //JProgressBar progressBar = new JProgressBar();
+			    conversor.getProgressBar().setMinimum(0);
+			    conversor.getProgressBar().setValue(0);
+			    conversor.getProgressBar().setStringPainted(true);
+			    Border borderLeitura = BorderFactory.createTitledBorder("Lendo arquivo...");
+			    conversor.getProgressBar().setBorder(borderLeitura);
+			    content.add(conversor.getProgressBar(), BorderLayout.NORTH);
+			    f.setSize(300, 100);
+			    f.setVisible(true);				
 				conversor.lerArquivoExcel();
+				f.setVisible(false);
 				if(fileChooser.showSaveDialog(null) == JFileChooser.APPROVE_OPTION){
+					Border borderEscrita = BorderFactory.createTitledBorder("Salvando arquivo...");
+					conversor.getProgressBar().setBorder(borderEscrita);
+					conversor.getProgressBar().setValue(0);
+					f.setVisible(true);
 					File fileSaida = fileChooser.getSelectedFile();
 					conversor.escreverArquivoExcel(fileSaida.getPath());
+					f.setVisible(false);
+					f.dispose();
 					JOptionPane.showMessageDialog(null, conversor.getSolicitacoesDestino().size() + " registros exportados.", "Processo finalizado", JOptionPane.INFORMATION_MESSAGE);
 				}		
 				
 			}
 		}catch(IOException e){
 			JOptionPane.showMessageDialog(null, e.getMessage(), "Processo não executado.", JOptionPane.ERROR_MESSAGE);
+			f.setVisible(false);
+			f.dispose();
 		}
 		
 	}
