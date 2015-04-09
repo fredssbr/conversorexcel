@@ -186,7 +186,7 @@ public class Excel {
 			solicitacaoDestino.setCriadoPor(solicitacaoOrigem.getRelatadoPor());
 			solicitacaoDestino.setGrupoResponsavel(solicitacaoOrigem.getGrupo());
 			solicitacaoDestino.setUsuarioResponsavel(solicitacaoOrigem.getResponsavel());
-			solicitacaoDestino.setStatus(solicitacaoOrigem.getStatus());
+			solicitacaoDestino.setStatus(getStatusDestinoByStatusOrigem(solicitacaoOrigem.getStatus()));
 			solicitacaoDestino.setPrioridade(solicitacaoOrigem.getPrioridade());			
 			solicitacaoDestino.setPais(getPaisByLocalidade(solicitacaoOrigem.getLocalidade()));
 			solicitacaoDestino.setLocalidade(solicitacaoOrigem.getLocalidade());			
@@ -197,13 +197,26 @@ public class Excel {
 			solicitacaoDestino.setCancelamento("");
 			solicitacaoDestino.setTempoTotalAccenture(solicitacaoOrigem.getSlaConsumido());
 			solicitacaoDestino.setDataMaxima(null);
-			solicitacaoDestino.setDescricao(solicitacaoOrigem.getDescricao());
+			solicitacaoDestino.setDescricao(solicitacaoOrigem.getSumario());
 			solicitacaoDestino.setCodigoConclusao("");			
 			
 			this.solicitacoesDestino.add(solicitacaoDestino);
 		}
 		
 
+	}
+	
+	private String getStatusDestinoByStatusOrigem(String pstatus){
+		String status = "";
+		if(pstatus !=null && pstatus.length() > 0){
+			for (int i = 0; i < this.prop.getStatusOrigem().length; i++) {
+				if(pstatus.equalsIgnoreCase(this.prop.getStatusOrigem()[i])){
+					status = this.prop.getStatusDestino()[i];
+					break;
+				}
+			}
+		}
+		return status;
 	}
 	
 	private String getPaisByLocalidade(String localidade){
