@@ -180,7 +180,7 @@ public class Excel {
 		for (SolicitacaoOrigem solicitacaoOrigem : this.solicitacoesOrigem) {
 			SolicitacaoDestino solicitacaoDestino = new SolicitacaoDestino();
 
-			solicitacaoDestino.setSolicitacao("CA"+solicitacaoOrigem.getNumeroChamado());
+			solicitacaoDestino.setSolicitacao("NIM110"+solicitacaoOrigem.getNumeroChamado());
 			solicitacaoDestino.setDataAbertura(solicitacaoOrigem.getDataAbertura());
 			solicitacaoDestino.setDataEncerramento(solicitacaoOrigem.getDataFechamento());
 			solicitacaoDestino.setCriadoPor(solicitacaoOrigem.getRelatadoPor());
