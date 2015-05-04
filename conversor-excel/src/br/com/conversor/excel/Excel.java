@@ -187,7 +187,7 @@ public class Excel {
 			solicitacaoDestino.setGrupoResponsavel(solicitacaoOrigem.getGrupo());
 			solicitacaoDestino.setUsuarioResponsavel(solicitacaoOrigem.getResponsavel());
 			solicitacaoDestino.setStatus(getStatusDestinoByStatusOrigem(solicitacaoOrigem.getStatus()));
-			solicitacaoDestino.setPrioridade(solicitacaoOrigem.getPrioridade());			
+			solicitacaoDestino.setPrioridade(getFormataPrioridade(solicitacaoOrigem.getPrioridade()));			
 			solicitacaoDestino.setPais(getPaisByLocalidade(solicitacaoOrigem.getLocalidade()));
 			solicitacaoDestino.setLocalidade(solicitacaoOrigem.getLocalidade());			
 			solicitacaoDestino.setCategoria(getCategoriaBySlaCategoria(solicitacaoOrigem.getSlaCategoria()));			
@@ -217,6 +217,16 @@ public class Excel {
 			}
 		}
 		return status;
+	}
+	
+	private String getFormataPrioridade(String pprioridade){
+		String prioridade = "";
+		if(pprioridade !=null && pprioridade.length() > 0){
+			if(!pprioridade.equalsIgnoreCase("nenhuma")){
+				prioridade = pprioridade;
+			}
+		}
+		return prioridade;
 	}
 	
 	private String getPaisByLocalidade(String localidade){
