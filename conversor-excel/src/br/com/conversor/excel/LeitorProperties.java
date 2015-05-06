@@ -10,7 +10,7 @@ public class LeitorProperties {
 
 	private final String arquivo = "config.properties";
 
-	private final String DIVISOR = ",";
+	private final String DIVISOR = ";";
 	private final String KEY_STATUS_ORIGEM = "statusOrigem";
 	private final String KEY_STATUS_DESTINO = "statusDestino";	
 	private final String KEY_SIGLA = "sigla";

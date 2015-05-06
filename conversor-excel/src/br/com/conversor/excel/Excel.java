@@ -179,28 +179,30 @@ public class Excel {
 	private void montaListaSolicitacaoDestino() throws IOException{
 		for (SolicitacaoOrigem solicitacaoOrigem : this.solicitacoesOrigem) {
 			SolicitacaoDestino solicitacaoDestino = new SolicitacaoDestino();
-
-			solicitacaoDestino.setSolicitacao("NIM110"+solicitacaoOrigem.getNumeroChamado());
-			solicitacaoDestino.setDataAbertura(solicitacaoOrigem.getDataAbertura());
-			solicitacaoDestino.setDataEncerramento(solicitacaoOrigem.getDataFechamento());
-			solicitacaoDestino.setCriadoPor(solicitacaoOrigem.getRelatadoPor());
-			solicitacaoDestino.setGrupoResponsavel(solicitacaoOrigem.getGrupo());
-			solicitacaoDestino.setUsuarioResponsavel(solicitacaoOrigem.getResponsavel());
-			solicitacaoDestino.setStatus(getStatusDestinoByStatusOrigem(solicitacaoOrigem.getStatus()));
-			solicitacaoDestino.setPrioridade(getFormataPrioridade(solicitacaoOrigem.getPrioridade()));			
-			solicitacaoDestino.setPais(getPaisByLocalidade(solicitacaoOrigem.getLocalidade()));
-			solicitacaoDestino.setLocalidade(solicitacaoOrigem.getLocalidade());			
-			solicitacaoDestino.setCategoria(getCategoriaBySlaCategoria(solicitacaoOrigem.getSlaCategoria()));			
-			solicitacaoDestino.setSistema(getSistemaByCategoriaChamado(solicitacaoOrigem.getCategoriaChamado()));
-			solicitacaoDestino.setSolicitante(solicitacaoOrigem.getRelatadoPor());
-			solicitacaoDestino.setSeveridade(getSeveridadeBySlaCategoria(solicitacaoOrigem.getSlaCategoria()));
-			solicitacaoDestino.setCancelamento("");
-			solicitacaoDestino.setTempoTotalAccenture(solicitacaoOrigem.getSlaConsumido());
-			solicitacaoDestino.setDataMaxima(null);
-			solicitacaoDestino.setDescricao(solicitacaoOrigem.getSumario());
-			solicitacaoDestino.setCodigoConclusao("");			
 			
-			this.solicitacoesDestino.add(solicitacaoDestino);
+			if(solicitacaoOrigem.getNumeroChamado()!=null && solicitacaoOrigem.getNumeroChamado().length() > 0){
+				solicitacaoDestino.setSolicitacao("NIM110"+solicitacaoOrigem.getNumeroChamado());
+				solicitacaoDestino.setDataAbertura(solicitacaoOrigem.getDataAbertura());
+				solicitacaoDestino.setDataEncerramento(solicitacaoOrigem.getDataFechamento());
+				solicitacaoDestino.setCriadoPor(solicitacaoOrigem.getRelatadoPor());
+				solicitacaoDestino.setGrupoResponsavel(solicitacaoOrigem.getGrupo());
+				solicitacaoDestino.setUsuarioResponsavel(solicitacaoOrigem.getResponsavel());
+				solicitacaoDestino.setStatus(getStatusDestinoByStatusOrigem(solicitacaoOrigem.getStatus()));
+				solicitacaoDestino.setPrioridade(getFormataPrioridade(solicitacaoOrigem.getPrioridade()));			
+				solicitacaoDestino.setPais(getPaisByLocalidade(solicitacaoOrigem.getLocalidade()));
+				solicitacaoDestino.setLocalidade(solicitacaoOrigem.getLocalidade());			
+				solicitacaoDestino.setCategoria(getCategoriaBySlaCategoria(solicitacaoOrigem.getSlaCategoria()));			
+				solicitacaoDestino.setSistema(getSistemaByCategoriaChamado(solicitacaoOrigem.getCategoriaChamado()));
+				solicitacaoDestino.setSolicitante(solicitacaoOrigem.getRelatadoPor());
+				solicitacaoDestino.setSeveridade(getSeveridadeBySlaCategoria(solicitacaoOrigem.getSlaCategoria()));
+				solicitacaoDestino.setCancelamento("");
+				solicitacaoDestino.setTempoTotalAccenture(solicitacaoOrigem.getSlaConsumido());
+				solicitacaoDestino.setDataMaxima(null);
+				solicitacaoDestino.setDescricao(solicitacaoOrigem.getSumario());
+				solicitacaoDestino.setCodigoConclusao("");			
+				
+				this.solicitacoesDestino.add(solicitacaoDestino);
+			}
 		}
 		
 
