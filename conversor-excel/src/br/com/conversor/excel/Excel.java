@@ -181,7 +181,7 @@ public class Excel {
 			SolicitacaoDestino solicitacaoDestino = new SolicitacaoDestino();
 			
 			if(solicitacaoOrigem.getNumeroChamado()!=null && solicitacaoOrigem.getNumeroChamado().length() > 0){
-				solicitacaoDestino.setSolicitacao("NIM110"+ String.format("%05d", Integer.parseInt(solicitacaoOrigem.getNumeroChamado())));
+				solicitacaoDestino.setSolicitacao("NIM110"+ String.format("%06d", Integer.parseInt(solicitacaoOrigem.getNumeroChamado())));
 				solicitacaoDestino.setDataAbertura(solicitacaoOrigem.getDataAbertura());
 				solicitacaoDestino.setDataEncerramento(solicitacaoOrigem.getDataFechamento());
 				solicitacaoDestino.setCriadoPor(solicitacaoOrigem.getRelatadoPor());
