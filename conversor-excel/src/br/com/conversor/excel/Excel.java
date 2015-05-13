@@ -61,110 +61,115 @@ public class Excel {
 			// Get the workbook instance for XLS file
 			HSSFWorkbook workbook = new HSSFWorkbook(file);
 	
-			// Get first sheet from the workbook
-			HSSFSheet sheet = workbook.getSheetAt(0);
-			
-			// Get iterator to all the rows in current sheet
-			Iterator<Row> rowIterator = sheet.iterator();
-			
-			int max = 0;
-			if(sheet.getLastRowNum() > 3){
-				max = sheet.getLastRowNum() - 3;
-			}
-			this.progressBar.setMaximum(max);
-			// Iterate through each rows from first sheet
-			while (rowIterator.hasNext()) {
-				Row row = rowIterator.next();
-				// pula as 3 primeiras linhas (nome da planilha e cabeçalhos)
-				if (row.getRowNum() < 3) {
-					continue;
+			for (int i = 0; i < workbook.getNumberOfSheets(); i++) {
+				// Get sheet from the workbook
+				HSSFSheet sheet = workbook.getSheetAt(i);
+				
+				// Get iterator to all the rows in current sheet
+				Iterator<Row> rowIterator = sheet.iterator();
+				
+				int max = 0;
+				if(sheet.getLastRowNum() > 3){
+					max = sheet.getLastRowNum() - 3;
+				}
+				this.progressBar.setMaximum(max);
+				// Iterate through each rows from first sheet
+				while (rowIterator.hasNext()) {
+					Row row = rowIterator.next();
+					// pula as 3 primeiras linhas (nome da planilha e cabeçalhos)
+					if (row.getRowNum() < 3) {
+						continue;
+					}
+					
+					this.progressBar.setValue(row.getRowNum() - 3);
+					// Get iterator to all cells of current row
+					Iterator<Cell> cellIterator = row.cellIterator();
+					// For each row, iterate through each columns
+					SolicitacaoOrigem solOrigem = new SolicitacaoOrigem();
+					while (cellIterator.hasNext()) {
+						Cell cell = cellIterator.next();
+						switch(cell.getColumnIndex()){
+						case 1:	
+							solOrigem.setTypeSymbol(cell.toString());
+							break;
+						case 2:	
+							solOrigem.setNumeroChamado(cell.toString());
+							break;
+						case 3:	
+							solOrigem.setStatus(cell.toString());
+							break;
+						case 4:	
+							solOrigem.setSlaConsumido(cell.toString());
+							break;
+						case 5:	
+							solOrigem.setNumeroProblema(cell.toString());
+							break;
+						case 6:	
+							solOrigem.setTicketExterno(cell.toString());					
+							break;
+						case 7:	
+							solOrigem.setSlaViolado(cell.toString());
+							break;
+						case 8:	
+							solOrigem.setDataAbertura(cell.getDateCellValue());
+							break;
+						case 9:	
+							solOrigem.setDataSolucao(cell.getDateCellValue());					
+							break;
+						case 10:	
+							solOrigem.setPrioridade(cell.toString());					
+							break;
+						case 11:
+							solOrigem.setDataFechamento(cell.getDateCellValue());					
+							break;
+						case 12:
+							solOrigem.setSumario(cell.toString());
+							break;
+						case 13:
+							solOrigem.setDescricao(cell.toString());					
+							break;
+						case 14:
+							solOrigem.setGrupo(cell.toString());					
+							break;
+						case 15:	
+							solOrigem.setCategoriaChamado(cell.toString());					
+							break;
+						case 16:
+							solOrigem.setSlaCategoria(cell.toString());
+							break;
+						case 17:
+							solOrigem.setResponsavel(cell.toString());
+							break;
+						case 18:
+							solOrigem.setRelatadoPor(cell.toString());
+							break;
+						case 19:	
+							solOrigem.setUsuarioFinalAfetado(cell.toString());					
+							break;
+						case 20:
+							solOrigem.setLocalidade(cell.toString());					
+							break;
+						case 21:
+							solOrigem.setGestor(cell.toString());
+							break;
+						case 22:
+							solOrigem.setSubGestor(cell.toString());					
+							break;
+						case 23:
+							solOrigem.setOrigem(cell.toString());
+							break;
+						default:
+							break;
+						}
+					}
+					if(solOrigem != null){
+						this.solicitacoesOrigem.add(solOrigem);
+					}			
 				}
 				
-				this.progressBar.setValue(row.getRowNum() - 3);
-				// Get iterator to all cells of current row
-				Iterator<Cell> cellIterator = row.cellIterator();
-				// For each row, iterate through each columns
-				SolicitacaoOrigem solOrigem = new SolicitacaoOrigem();
-				while (cellIterator.hasNext()) {
-					Cell cell = cellIterator.next();
-					switch(cell.getColumnIndex()){
-					case 1:	
-						solOrigem.setTypeSymbol(cell.toString());
-						break;
-					case 2:	
-						solOrigem.setNumeroChamado(cell.toString());
-						break;
-					case 3:	
-						solOrigem.setStatus(cell.toString());
-						break;
-					case 4:	
-						solOrigem.setSlaConsumido(cell.toString());
-						break;
-					case 5:	
-						solOrigem.setNumeroProblema(cell.toString());
-						break;
-					case 6:	
-						solOrigem.setTicketExterno(cell.toString());					
-						break;
-					case 7:	
-						solOrigem.setSlaViolado(cell.toString());
-						break;
-					case 8:	
-						solOrigem.setDataAbertura(cell.getDateCellValue());
-						break;
-					case 9:	
-						solOrigem.setDataSolucao(cell.getDateCellValue());					
-						break;
-					case 10:	
-						solOrigem.setPrioridade(cell.toString());					
-						break;
-					case 11:
-						solOrigem.setDataFechamento(cell.getDateCellValue());					
-						break;
-					case 12:
-						solOrigem.setSumario(cell.toString());
-						break;
-					case 13:
-						solOrigem.setDescricao(cell.toString());					
-						break;
-					case 14:
-						solOrigem.setGrupo(cell.toString());					
-						break;
-					case 15:	
-						solOrigem.setCategoriaChamado(cell.toString());					
-						break;
-					case 16:
-						solOrigem.setSlaCategoria(cell.toString());
-						break;
-					case 17:
-						solOrigem.setResponsavel(cell.toString());
-						break;
-					case 18:
-						solOrigem.setRelatadoPor(cell.toString());
-						break;
-					case 19:	
-						solOrigem.setUsuarioFinalAfetado(cell.toString());					
-						break;
-					case 20:
-						solOrigem.setLocalidade(cell.toString());					
-						break;
-					case 21:
-						solOrigem.setGestor(cell.toString());
-						break;
-					case 22:
-						solOrigem.setSubGestor(cell.toString());					
-						break;
-					case 23:
-						solOrigem.setOrigem(cell.toString());
-						break;
-					default:
-						break;
-					}
-				}
-				if(solOrigem != null){
-					this.solicitacoesOrigem.add(solOrigem);
-				}			
 			}
+			
+			
 			workbook.close();
 			file.close();
 			
@@ -272,7 +277,7 @@ public class Excel {
 	private String getSeveridadeBySlaCategoria(String slaCategoria){
 		String severidade = "";
 		if(slaCategoria !=null && slaCategoria.length() > 0){
-			severidade = slaCategoria.substring(slaCategoria.length() - 2, slaCategoria.length() - 1);
+			severidade = slaCategoria.substring(slaCategoria.length() - 1, slaCategoria.length());
 			try {
 				Integer.parseInt(severidade);
 			} catch (Exception e) {
