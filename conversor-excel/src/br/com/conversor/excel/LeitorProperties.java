@@ -19,7 +19,7 @@ public class LeitorProperties {
 	private final String KEY_PAIS = "pais";
 	private final String KEY_SISTEMA = "sistema";
 	private final String KEY_CABECALHO = "cabecalho";
-	
+	//vars
 	private String[] statusOrigem;
 	private String[] statusDestino;
 	private String[] sigla;
